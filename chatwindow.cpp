@@ -1,11 +1,4 @@
 #include "chatwindow.h"
-<<<<<<< HEAD
-
-ChatWindow::ChatWindow(QWidget *parent)
-    : QMainWindow{parent}
-{
-}
-=======
 #include "./ui_chatwindow.h"
 #include "client/client.h"
 #include <QJsonArray>
@@ -313,4 +306,3 @@ void Person::onMessagesAcquired(QJsonArray &messages){
 
 
 
->>>>>>> fd4b0ca (Added users, dialogs)

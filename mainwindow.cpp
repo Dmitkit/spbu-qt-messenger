@@ -1,18 +1,11 @@
 #include "mainwindow.h"
-<<<<<<< HEAD
-=======
 #include "chatwindow.h"
 #include "client/client.h"
->>>>>>> fd4b0ca (Added users, dialogs)
 #include <QPalette>
 #include <QString>
 #include <QTimer>
 #include <QMessageBox>
 #include <QIcon>
-<<<<<<< HEAD
-#include "chatwindow.h"
-=======
->>>>>>> fd4b0ca (Added users, dialogs)
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -23,10 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     registerButton(new QPushButton("Регистрация")),
     mainLayout(new QVBoxLayout()),
     buttonLayout(new QHBoxLayout()),
-<<<<<<< HEAD
-    inputLayout(new QVBoxLayout())
-{
-=======
     inputLayout(new QVBoxLayout()),
     helpButton(new QPushButton("?")),
     myClient(new Client(this))
@@ -41,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(myClient, &Client::disconnected, this, &MainWindow::onDisconnected);
 
 
->>>>>>> fd4b0ca (Added users, dialogs)
     setWindowTitle("");
     setWindowIcon(QIcon());
     setCentralWidget(centralWidget);
@@ -52,24 +40,6 @@ MainWindow::MainWindow(QWidget *parent)
     setPalette(pal);
 
     loginButton->setStyleSheet("QPushButton {"
-<<<<<<< HEAD
-                                    "background-color: #1E90FF;"
-                                    "color: white;"
-                                    "border-radius: 8px;"
-                                    "padding: 8px 12px;"
-                                    "outline: none;}"
-                               "QPushButton:hover {"
-                                    "background-color: #1C86EE; }");
-
-    registerButton->setStyleSheet("QPushButton {"
-                                    "background-color: #1E90FF;"
-                                    "color: white;"
-                                    "border-radius: 8px;"
-                                    "padding: 8px 12px;"
-                                    "outline: none;}"
-                                  "QPushButton:hover{"
-                                    "background-color: #1C86EE;}");
-=======
                                "background-color: #1E90FF;"
                                "color: white;"
                                "border-radius: 8px;"
@@ -86,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
                                   "outline: none;}"
                                   "QPushButton:hover{"
                                   "background-color: #1C86EE;}");
->>>>>>> fd4b0ca (Added users, dialogs)
 
     loginEdit->setPlaceholderText("Введите логин");
     passwordEdit->setPlaceholderText("Введите пароль");
@@ -111,19 +80,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::onLoginBtnClicked);
     connect(passwordEdit, &QLineEdit::returnPressed, this, &MainWindow::onLoginBtnClicked);
-<<<<<<< HEAD
-
-
-    helpButton = new QPushButton("?");
-    helpButton->setStyleSheet("QPushButton {"
-                                  "background-color: #1E90FF;"
-                                  "color: white;"
-                                  "border-radius: 8px;"
-                                  "padding: 8px 12px;}"
-                                  "QPushButton:hover{"
-                                  "background-color: #1C86EE;"
-                                  "outline: none;}");
-=======
     connect(registerButton, &QPushButton::clicked, this, &MainWindow::onRegisterButtonClicked);
 
     helpButton->setStyleSheet("QPushButton {"
@@ -134,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
                               "QPushButton:hover{"
                               "background-color: #1C86EE;"
                               "outline: none;}");
->>>>>>> fd4b0ca (Added users, dialogs)
     helpButton->setFixedSize(30, 30);
     mainLayout->addWidget(helpButton, 0, Qt::AlignRight);
     connect(helpButton, &QPushButton::clicked, this, []() {
@@ -143,43 +98,21 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::onLoginBtnClicked() {
-<<<<<<< HEAD
-    QString correctLogin = "Dima";
-    QString correctPassword = "123";
-
-    if (loginEdit->text() == correctLogin && passwordEdit->text() == correctPassword) {
-        colorLines("green");
-        QTimer::singleShot(1000, this, [=]() {colorLines("blue");});
-
-    } else {
-        colorLines("red");
-        QTimer::singleShot(1000, this, [=](){colorLines("blue");});
-    }
-=======
     QString login = loginEdit->text();
     QString password = passwordEdit->text();
 
     myClient->login(login, password);
->>>>>>> fd4b0ca (Added users, dialogs)
 }
 
 
 
 void MainWindow::colorLines(QString color){
     QString styleSheetRed = "QLineEdit {background-color: #FFB6C1;"
-<<<<<<< HEAD
-                         "padding: 6px;"
-                         "border-radius: 5px;}";
-    QString styleSheetBlue = "QLineEdit {background-color: #ADD8E6;"
-                              "padding: 6px;"
-                              "border-radius: 5px;}";
-=======
                             "padding: 6px;"
                             "border-radius: 5px;}";
     QString styleSheetBlue = "QLineEdit {background-color: #ADD8E6;"
                              "padding: 6px;"
                              "border-radius: 5px;}";
->>>>>>> fd4b0ca (Added users, dialogs)
     QString styleSheetGreen = "QLineEdit {background-color: #90EE90;"
                               "padding: 6px;"
                               "border-radius: 5px;}";
@@ -202,8 +135,6 @@ MainWindow::~MainWindow() {
 
 }
 
-<<<<<<< HEAD
-=======
 void MainWindow::onRegisterButtonClicked() {
     // Скрываем виджеты авторизации
     loginEdit->hide();
@@ -356,4 +287,3 @@ void MainWindow::onDisconnected()
 void MainWindow::onNewMessage(const QString &sender, const QString &message)
 {}
 
->>>>>>> fd4b0ca (Added users, dialogs)

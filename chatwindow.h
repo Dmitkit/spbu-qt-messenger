@@ -1,10 +1,6 @@
 #ifndef CHATWINDOW_H
 #define CHATWINDOW_H
 
-<<<<<<< HEAD
-#include <QMainWindow>
-#include <QObject>
-=======
 #include <QString>
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -36,20 +32,10 @@ protected:
 public slots:
     void onMessagesAcquired(QJsonArray &messages);
 };
->>>>>>> fd4b0ca (Added users, dialogs)
 
 class ChatWindow : public QMainWindow
 {
     Q_OBJECT
-<<<<<<< HEAD
-public:
-    explicit ChatWindow(QWidget *parent = nullptr);
-
-signals:
-};
-
-#endif // CHATWINDOW_H
-=======
 
 public:
     ChatWindow(Client* client, QWidget *parent = nullptr);
@@ -69,4 +55,3 @@ private slots:
 };
 #endif // CHATWINDOW_H
 
->>>>>>> fd4b0ca (Added users, dialogs)
