@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>im/icon_sent.png</file>
+        <file>im/icon0.jpg</file>
+        <file>im/icon1.jpg</file>
+        <file>im/icon2.jpg</file>
+        <file>im/icon3.jpg</file>
+        <file>im/icon4.jpg</file>
+        <file>im/background.jpg</file>
+    </qresource>
+</RCC>

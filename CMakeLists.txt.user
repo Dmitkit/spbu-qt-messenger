@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< HEAD
 <!-- Written by QtCreator 13.0.1, 2024-11-02T11:56:22. -->
+=======
+<!-- Written by QtCreator 13.0.1, 2024-11-29T23:57:12. -->
+>>>>>>> fd4b0ca (Added users, dialogs)
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -107,7 +111,11 @@
 -DCMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}
 -DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
 -DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\Messenger\Mesger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Debug</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\spbu-qt-messenger\spbu-qt-messenger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Debug</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
@@ -162,7 +170,11 @@
 -DCMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}
 -DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
 -DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\Messenger\Mesger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Release</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\spbu-qt-messenger\spbu-qt-messenger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Release</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
@@ -215,7 +227,11 @@
 -DCMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}
 -DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
 -DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\Messenger\Mesger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-RelWithDebInfo</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\spbu-qt-messenger\spbu-qt-messenger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-RelWithDebInfo</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
@@ -269,7 +285,11 @@
 -DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
 -DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
     <value type="int" key="EnableQmlDebugging">0</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\Messenger\Mesger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Profile</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\spbu-qt-messenger\spbu-qt-messenger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Profile</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
@@ -322,7 +342,11 @@
 -DCMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}
 -DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
 -DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\Messenger\Mesger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-MinSizeRel</value>
+=======
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Coding\spbu-qt-messenger\spbu-qt-messenger\build\Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-MinSizeRel</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
@@ -387,14 +411,24 @@
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Mesger</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.Mesger</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">Mesger</value>
+=======
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">spbu-qt-messenger</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.spbu-qt-messenger</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">spbu-qt-messenger</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+<<<<<<< HEAD
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Coding/Messenger/Mesger/build/Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Debug</value>
+=======
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Coding/spbu-qt-messenger/spbu-qt-messenger/build/Desktop_Qt_shared_MinGW_w64_MINGW64_MSYS2-Debug</value>
+>>>>>>> fd4b0ca (Added users, dialogs)
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
