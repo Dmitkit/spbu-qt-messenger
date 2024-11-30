@@ -38,20 +38,25 @@ QPixmap createRoundPixmap(const QPixmap &pixmap) { //округление фот
     return roundedPixmap;
 }
 
-void addChatMessage(const QString &text, bool isIncoming, QTextBrowser *chatBrowser) {
+void ChatWindow::addChatMessage(const QString &time, const QString &text, bool isIncoming, QString sender) {
     // Создание HTML кода для сообщения
+    if (sender.isEmpty()){
+        sender = this->myClient->getLogin();
+    }
     QString html = "<div style=\"";
     if (isIncoming) {
-        html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 20px; margin-right: 10px; margin-left: 80px; text-align: right;\"";
+        qDebug() << "incoming\n";
+        html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 10px; margin-left: 80px; text-align: left;\"";
     } else {
-        html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 20px; margin-right: 60px; margin-left: 10px; text-align: left\"";
+        qDebug() << "outcoming\n";
+        html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 80px; margin-left: 10px; text-align: right;\"";
     }
     html += ">";
-    html += text;
+    html += "<b>" + sender + "</b>: " + text + "<br><span style='font-size: 10px;'>" + time + "</span>";
     html += "</div>";
 
-    // Добавление HTML в QTextBrowser
-    chatBrowser->append(html);
+    // Добавляем сообщение в QTextBrowser
+    messageHistory->append(html);
 }
 
 ChatWindow::ChatWindow(Client* client, QWidget *parent)
@@ -166,7 +171,7 @@ ChatWindow::ChatWindow(Client* client, QWidget *parent)
     //функционал кнопки
     connect(sendButton, &QPushButton::clicked, this, [this, textInput]() {
         QString message = textInput->toPlainText();
-        addChatMessage(message, false, messageHistory);   //пока что здесь меняется отправка сообщения
+        addChatMessage("11:10", message, false, myClient->getLogin());   //пока что здесь меняется отправка сообщения
         textInput->clear();                              // true - я; false - другой пользователь
         qDebug() << "Отправлено сообщение:" << message;
     });
@@ -279,21 +284,7 @@ void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTe
 
         QString sender = (isIncoming == true) ? person->userName : myClient->getLogin();
 
-        // Форматируем сообщение
-        QString html = "<div style=\"";
-        if (isIncoming) {
-            qDebug() << "incoming\n";
-            html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 10px; margin-left: 80px; text-align: left;\"";
-        } else {
-            qDebug() << "outcoming\n";
-            html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 80px; margin-left: 10px; text-align: right;\"";
-        }
-        html += ">";
-        html += "<b>" + sender + "</b>: " + text + "<br><span style='font-size: 10px;'>" + time + "</span>";
-        html += "</div>";
-
-        // Добавляем сообщение в QTextBrowser
-        messageHistory->append(html);
+        addChatMessage(time, text, isIncoming, sender);
     }
     stacked_wid->setCurrentIndex(1);
 }

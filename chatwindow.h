@@ -49,6 +49,7 @@ private:
     QTextBrowser *messageHistory;
     Person* createChatWithUser(const QString &name, const QString &photo_path, QVBoxLayout* layout);
     void displayMessages(Person* person, const QJsonArray &messages, QTextBrowser *messageHistory);
+    void addChatMessage(const QString &time, const QString &text, bool isIncoming = false, QString sender = "");
 private slots:
     void onChatsAcquired(const QJsonArray &chats);
     void createChat(const QJsonObject &chatInfo); // и слот и просто функция

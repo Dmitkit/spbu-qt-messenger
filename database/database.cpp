@@ -31,7 +31,9 @@ Database::Database() {
 
     querymessages = new QSqlQuery(messagesdb);
     querymessages->exec("CREATE TABLE IF NOT EXISTS Messages(MesId INTEGER PRIMARY KEY AUTOINCREMENT, time TEXT, sender TEXT, ToChat TEXT, writed TEXT);");
-
+    addUser("Krovosos", "Dima", "123");
+    addUser("2", "2", "2");
+    addChat(GetUserId("2"), GetUserId("Dima"));
     addMessage("11:29", GetUserId("Dima"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Привет!");
     addMessage("11:30", GetUserId("Dima"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Чего молчишь?");
     addMessage("11:31", GetUserId("2"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Чел");
