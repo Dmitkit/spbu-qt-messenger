@@ -47,15 +47,15 @@ void Client::getMessages(int dialogID){
     }
 }
 
-void Client::sendMessage(const QString& message, const QString& recipient)
+void Client::sendMessage(const int recipientId, const QString& message)
 {
-    if (!recipient.isEmpty() && !message.isEmpty()) {
+    if (recipientId > 0 && !message.isEmpty()) {
         QByteArray data;
         QDataStream out(&data, QIODevice::WriteOnly);
 
-        out << QString("MESSAGE") << myLogin << recipient << message;
+        out << QString("MESSAGE") << myUserId << recipientId << message;
         socket->write(data);
-        qDebug() << "Message sent to:" << recipient;
+        qDebug() << "Message sent to:" << recipientId;
     } else {
         qDebug() << "Invalid recipient or message!";
     }
@@ -111,7 +111,11 @@ void Client::onReadyRead()
 
     if (response == "LOGIN_SUCCESS") {
         qDebug() << "Login successful!";
-        emit loginSuccess();
+        int userId;
+        QString userName;
+        in >> userId >> userName;
+        qDebug() << userId << userName;
+        emit loginSuccess(userId, userName);
     } else if (response == "LOGIN_FAILED") {
         qDebug() << "Login failed!";
         emit loginError("error");
@@ -154,7 +158,28 @@ void Client::onReadyRead()
         } else {
             qDebug() << "Failed to parse messages response";
         }
-    }else {
+    }else if (response == "MESSAGE_SENT") {
+        QByteArray jsonData;
+        in >> jsonData;
+
+        QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+        if (!doc.isNull() && doc.isObject()) {
+            QJsonObject responseObj = doc.object();
+            int chatId = responseObj["chatId"].toInt();
+            QString sender = responseObj["sender"].toString();
+            QString messageText = responseObj["messageText"].toString();
+            QString time = responseObj["time"].toString();
+
+            // Обработать полученное сообщение (например, обновить UI или вывести в лог)
+            qDebug() << "Message sent by user" << sender << ": " << messageText << "at" << time;
+
+            // Эмитируем сигнал для обновления интерфейса
+            emit messageSent(sender, chatId, messageText, time);
+        } else {
+            qDebug() << "Failed to parse message sent response";
+        }
+    }
+    else {
         qDebug() << "Server response:";
     }
 }
@@ -162,6 +187,19 @@ void Client::onReadyRead()
 QString Client::getLogin(){
     return(myLogin);
 };
+
+int Client::getUserId(){
+    return(myUserId);
+}
+
+void Client::setUserId(int userId){
+    this->myUserId = userId;
+}
+
+void Client::setLogin(QString login){
+    this->myLogin = login;
+}
+
 // void Client::loginSuccess(){}
 
 // // Ошибка при входе (например, неправильный логин или пароль)

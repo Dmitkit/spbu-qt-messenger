@@ -31,13 +31,6 @@ Database::Database() {
 
     querymessages = new QSqlQuery(messagesdb);
     querymessages->exec("CREATE TABLE IF NOT EXISTS Messages(MesId INTEGER PRIMARY KEY AUTOINCREMENT, time TEXT, sender TEXT, ToChat TEXT, writed TEXT);");
-    addUser("Krovosos", "Dima", "123");
-    addUser("2", "2", "2");
-    addChat(GetUserId("2"), GetUserId("Dima"));
-    addMessage("11:29", GetUserId("Dima"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Привет!");
-    addMessage("11:30", GetUserId("Dima"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Чего молчишь?");
-    addMessage("11:31", GetUserId("2"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Чел");
-    addMessage("11:32", GetUserId("2"), GetChatId(GetUserId("Dima"), GetUserId("2")), "Я буквально цифра 2");
 }
 
 bool Database::addUser(const QString& name, const QString& login, const QString& pas) {
@@ -289,6 +282,29 @@ const QString& Database::GetUserName(int id) {
     }
 
     return userName;
+}
+const QString& Database::GetUserLogin(int id)
+{
+    static QString login;
+
+    QSqlQuery query(userdb);
+
+
+    query.prepare("SELECT login FROM Users WHERE Id = :id");
+    query.bindValue(":id", id);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса";
+        return "none";
+    }
+
+    if (query.next()) {
+        login = query.value("login").toString();
+    } else {
+        login = "";
+    }
+
+    return login;
 }
 const int Database::GetUserId(QString login) {
     static int userId;

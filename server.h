@@ -20,7 +20,7 @@ private slots:
     void onDisconnected();    // Обработчик отключений клиента
 
 private:
-    void handleMessage(QTcpSocket* clientSocket, QDataStream &in); // Обработка сообщений
+    void handleSendMessage(QTcpSocket* clientSocket, QDataStream &in); // Обработка сообщений
     void handleLogin(QTcpSocket* clientSocket, QDataStream &in);   // Обработка логина
     void handleRegister(QTcpSocket* clientSocket, QDataStream &in); // Обработка регистрации
     void handleGetChats(QTcpSocket* clientSocket, QDataStream &in); // Обработка получения диалогов пользователя

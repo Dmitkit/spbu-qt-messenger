@@ -220,13 +220,15 @@ void MainWindow::onBackButtonClicked() {
     });
 }
 
-void MainWindow::onLoginSuccess()
+void MainWindow::onLoginSuccess(int userId, QString& userName)
 {
     // Обновляем интерфейс после успешного входа
     colorLines("green");
     QTimer::singleShot(1000, this, [=]() {colorLines("blue");});
     // Скрываем текущее окно
     this->hide();
+    this->myClient->setUserId(userId);
+    this->myClient->setUserName(userName);
 
     // Открываем окно чата
     ChatWindow* chatWindow = new ChatWindow(myClient, this);

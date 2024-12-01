@@ -38,7 +38,7 @@ public slots:
     void onBackButtonClicked();
 
 private slots:
-    void onLoginSuccess();
+    void onLoginSuccess(int userId, QString& userName);
     void onLoginError(const QString &errorMessage);
     void onRegistrationSuccess();
     void onRegistrationError(const QString &errorMessage);

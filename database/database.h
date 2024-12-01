@@ -37,6 +37,7 @@ public:
     // Утилиты
     const QString& GetUserName(int id);
     const int GetUserId (QString login);
+    const QString& GetUserLogin(int id);
 
 private:
     QSqlDatabase userdb;        // База данных пользователей

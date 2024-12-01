@@ -26,6 +26,10 @@ void Person::mousePressEvent(QMouseEvent *event) { //кликабельност�
     emit mousePressed();
 }
 
+int Person::getChatId(){
+    return dialogId;
+};
+
 QPixmap createRoundPixmap(const QPixmap &pixmap) { //округление фото
     QPixmap roundedPixmap(pixmap.size());
     roundedPixmap.fill(Qt::transparent); // Устанавливаем прозрачный фон
@@ -41,14 +45,13 @@ QPixmap createRoundPixmap(const QPixmap &pixmap) { //округление фот
 void ChatWindow::addChatMessage(const QString &time, const QString &text, bool isIncoming, QString sender) {
     // Создание HTML кода для сообщения
     if (sender.isEmpty()){
-        sender = this->myClient->getLogin();
+        sender = this->myClient->getUserName();
     }
     QString html = "<div style=\"";
+    isIncoming = sender == this->myClient->getUserName();
     if (isIncoming) {
-        qDebug() << "incoming\n";
         html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 10px; margin-left: 80px; text-align: left;\"";
     } else {
-        qDebug() << "outcoming\n";
         html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 80px; margin-left: 10px; text-align: right;\"";
     }
     html += ">";
@@ -168,14 +171,15 @@ ChatWindow::ChatWindow(Client* client, QWidget *parent)
 
     inputLayout->addWidget(sendButton);
 
+    connect(myClient, &Client::messageSent, this, &ChatWindow::onNewMessage);
     //функционал кнопки
     connect(sendButton, &QPushButton::clicked, this, [this, textInput]() {
         QString message = textInput->toPlainText();
-        addChatMessage("11:10", message, false, myClient->getLogin());   //пока что здесь меняется отправка сообщения
+        // addChatMessage("11:10", message, false, myClient->getLogin());   //пока что здесь меняется отправка сообщения
+        myClient->sendMessage(this->getCurrentUser(), message);
         textInput->clear();                              // true - я; false - другой пользователь
         qDebug() << "Отправлено сообщение:" << message;
     });
-
 
     messageArea->setLayout(messageAreaLayout);
     stacked_wid->addWidget(messageArea);
@@ -259,9 +263,13 @@ void ChatWindow::createChat(const QJsonObject &chatInfo)
     }
 
     connect(person, &Person::mousePressed, this, [this, person](){
+        this->setCurrentChat(person->getChatId());
+        this->setCurrentUser(person->getUserId());
         this->myClient->getMessages(person->dialogId);
         connect(this->myClient, &Client::messagesAcquired, person, [this, person](QJsonArray &messages){
             displayMessages(person, messages, messageHistory);
+            this->setCurrentChat(person->getChatId());
+            this->setCurrentUser(person->getUserId());
         });
     });
 
@@ -280,9 +288,9 @@ void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTe
 
         // Определяем, входящее сообщение или исходящее
         bool isIncoming = (senderId == person->userId); // Например, "Me" — это текущий пользователь
-        qDebug() << senderId << " " << person->userId << " " << myClient->getLogin();
+        qDebug() << senderId << " " << person->userId << " " << isIncoming << "Я" << myClient->getUserName();
 
-        QString sender = (isIncoming == true) ? person->userName : myClient->getLogin();
+        QString sender = (isIncoming == true) ? person->userName : myClient->getUserName();
 
         addChatMessage(time, text, isIncoming, sender);
     }
@@ -290,10 +298,14 @@ void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTe
 }
 
 
-void Person::onMessagesAcquired(QJsonArray &messages){
-    qDebug() << messages;
-    // ChatWindow::displayMessages(this, messages, *(this->parent())->messageHistory);
-};
+void ChatWindow::onNewMessage(QString& sender, int chatId, QString& messageText, QString& time){
+    if (this->getCurrentChat() != chatId){
+        return;
+    }
+    bool isIncoming = this->myClient->getUserName() == sender ? false: true;
+    addChatMessage(time, messageText, isIncoming, sender);
+}
+
 
 
 

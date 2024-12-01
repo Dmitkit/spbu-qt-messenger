@@ -34,7 +34,7 @@ void Server::onReadyRead()
     in >> type;
 
     if (type == "MESSAGE") {
-        handleMessage(clientSocket, in);
+        handleSendMessage(clientSocket, in);
     } else if (type == "LOGIN") {
         handleLogin(clientSocket, in);
     } else if (type == "REGISTER") {
@@ -48,24 +48,57 @@ void Server::onReadyRead()
     }
 }
 
-void Server::handleMessage(QTcpSocket *clientSocket, QDataStream &in)
+void Server::handleSendMessage(QTcpSocket *clientSocket, QDataStream &in)
 {
-    QString sender, recipient, message;
-    in >> sender >> recipient >> message;
+    int senderId, receiverId;
+    QString messageText;
 
-    if (clients.contains(recipient)) {
-        QTcpSocket *recipientSocket = clients[recipient];
-        QByteArray data;
-        QDataStream out(&data, QIODevice::WriteOnly);
-        out << QString("From %1: %2").arg(sender).arg(message);
-        recipientSocket->write(data);
+    // Читаем данные из потока
+    in >> senderId >> receiverId >> messageText;
+
+    // Проверяем, существует ли чат между пользователями
+    int chatId = db->GetChatId(senderId, receiverId);
+    QByteArray data;
+    QDataStream out(&data, QIODevice::WriteOnly);
+
+    if (chatId == -1) {
+        // Если чат не найден, отправляем ошибку
+        out << QString("ERROR: Чат между пользователями не существует.");
+        clientSocket->write(data);
+        return;
+    }
+
+    // Получаем текущее время для сообщения
+    QString currentTime = QDateTime::currentDateTime().toString("hh:mm");
+
+    // Добавляем сообщение в базу данных
+    if (db->addMessage(currentTime, senderId, chatId, messageText)) {
+        QString senderName = db->GetUserName(senderId);
+        // Если сообщение добавлено успешно, отправляем информацию о сообщении
+        QJsonObject response{
+            {"sender", senderName},
+            {"chatId", chatId},
+            {"messageText", messageText},
+            {"time", currentTime}
+        };
+
+        QByteArray jsonData = QJsonDocument(response).toJson(QJsonDocument::Compact);
+        out << QString("MESSAGE_SENT") << jsonData;
+        QString senderLogin = db->GetUserLogin(senderId);
+        clients[senderLogin]->write(data);
+
+        // Проверяем, если второй пользователь в сети, отправляем ему сообщение
+        QString receiverLogin = db->GetUserLogin(receiverId);
+        if (clients[receiverLogin] != nullptr && receiverId != -1) {
+            clients[receiverLogin]->write(data); // отправляем второму пользователю
+        }
     } else {
-        QByteArray data;
-        QDataStream out(&data, QIODevice::WriteOnly);
-        out << QString("ERROR: Recipient not connected.");
+        // Если не удалось добавить сообщение
+        out << QString("ERROR: Не удалось отправить сообщение.");
         clientSocket->write(data);
     }
 }
+
 
 void Server::handleLogin(QTcpSocket *clientSocket, QDataStream &in)
 {
@@ -76,7 +109,9 @@ void Server::handleLogin(QTcpSocket *clientSocket, QDataStream &in)
         clients[login] = clientSocket;
         QByteArray data;
         QDataStream out(&data, QIODevice::WriteOnly);
-        out << QString("LOGIN_SUCCESS");
+        int userId = db->GetUserId(login);
+        QString userName = db->GetUserName(userId);
+        out << QString("LOGIN_SUCCESS") << userId << userName;
         clientSocket->write(data);
         qDebug() << "User logged in:" << login;
     } else {
@@ -233,6 +268,9 @@ void Server::handleAddChat(QTcpSocket *clientSocket, QDataStream &in)
             int chatId = db->GetChatId(firstUserId, secondUserId);
             QString secondUserName = db->GetUserName(secondUserId);
 
+            QString currentTime = QDateTime::currentDateTime().toString("hh:mm");
+            db->addMessage(currentTime, firstUserId, chatId, "Привет! Я добавил тебя в мессенджере!");
+
             // Если чат создан, отправляем информацию о чате
             QJsonObject response{
                 {"chatId", chatId},
@@ -241,13 +279,22 @@ void Server::handleAddChat(QTcpSocket *clientSocket, QDataStream &in)
             };
 
             QByteArray jsonData = QJsonDocument(response).toJson(QJsonDocument::Compact);
-
             qDebug() << "Server added chat";
             out << QString("CHAT_CREATED") << jsonData;
 
             clientSocket->write(data); // отправляем тому кто запрашивал новый чат
             if (clients[secondLogin] != nullptr){ // если тот с кем новый чат открыт - в сети
-                clients[secondLogin]->write(data);} // то отправляем и ему тоже
+                QString firstUserName = db->GetUserName(firstUserId);
+                QJsonObject responseToSecond{
+                    {"chatId", chatId},
+                    {"userId", firstUserId},
+                    {"userName", firstUserName}
+                };
+                QByteArray dataToSecond;
+                QDataStream outSecond(&dataToSecond, QIODevice::WriteOnly);
+                QByteArray jsonDataToSecond = QJsonDocument(responseToSecond).toJson(QJsonDocument::Compact);
+                outSecond << QString("CHAT_CREATED") << jsonDataToSecond;
+                clients[secondLogin]->write(dataToSecond);} // то отправляем и ему тоже
 
         } else {
             // Если не удалось создать чат
