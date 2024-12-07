@@ -323,10 +323,10 @@ void ChatWindow::createChat(const QJsonObject &chatInfo)
 
 
 void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTextBrowser *messageHistory) {
-    //messageHistory->clear(); // Очистка старых сообщений
-    QTextCursor cursor = messageHistory->textCursor();
-    cursor.movePosition(QTextCursor::End);
-    messageHistory->setTextCursor(cursor);
+    messageHistory->clear(); // Очистка старых сообщений
+    // QTextCursor cursor = messageHistory->textCursor();
+    // cursor.movePosition(QTextCursor::End);
+    // messageHistory->setTextCursor(cursor);
     for (const QJsonValue &value : messages) {
         QJsonObject messageObj = value.toObject();
         int senderId = messageObj["sender"].toInt();
