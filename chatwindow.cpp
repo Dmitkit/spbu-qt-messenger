@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QFrame>
 #include <QJsonObject>
+#include <QScrollBar>
 
 Person::Person(QWidget *parent) : QWidget(parent) {}
 
@@ -42,25 +43,63 @@ QPixmap createRoundPixmap(const QPixmap &pixmap) { //округление фот
     return roundedPixmap;
 }
 
-void ChatWindow::addChatMessage(const QString &time, const QString &text, bool isIncoming, QString sender) {
+/*void addChatMessage(const QString &text, bool isIncoming, QTextBrowser *chatBrowser) {
     // Создание HTML кода для сообщения
-    if (sender.isEmpty()){
-        sender = this->myClient->getUserName();
-    }
+
     QString html = "<div style=\"";
-    isIncoming = sender == this->myClient->getUserName();
     if (isIncoming) {
-        html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 10px; margin-left: 80px; text-align: left;\"";
+        html += "background-color: #9A7E6F; border-radius: 10px; padding: 10px; margin-bottom: 20px; margin-right: 10px; margin-left: 80px; text-align: right;\"";
     } else {
-        html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 80px; margin-left: 10px; text-align: right;\"";
+        html += "background-color: #7e6f9a; border-radius: 10px; padding: 10px; margin-bottom: 20px; margin-right: 60px; margin-left: 10px; text-align: left\"";
     }
     html += ">";
-    html += "<b>" + sender + "</b>: " + text + "<br><span style='font-size: 10px;'>" + time + "</span>";
+    html += text;
     html += "</div>";
 
-    // Добавляем сообщение в QTextBrowser
-    messageHistory->append(html);
+    // Добавление HTML в QTextBrowser
+    chatBrowser->append(html);
+}*/
+
+void ChatWindow::addChatMessage(const QString &time, const QString &text, bool isIncoming, QString sender) {
+
+    if (text.isEmpty()) return;
+
+    QString backgroundColor = isIncoming ? "#9A7E6F" : "#7E6F9A";
+    QString alignment = isIncoming ? "left" : "right";
+
+    QString html = QString(
+                       R"(
+        <div style="text-align: %1; margin-bottom: 20px;">
+            <div style="display: inline-block;">
+                <div style="background-color: %2; border-radius: 10px; padding: 10px; margin-right: %3; margin-left: %4;">
+                    <div style="color: black;"><b>%5</b></div>
+                    <div style="word-wrap: break-word; color: white;">%6</div>
+                </div>
+                <div style="font-size: 10px; color: #666666; margin-top: 2px; margin-%7: 15px;">%8</div>
+            </div>
+        </div>
+        )")
+
+                       .arg(alignment)
+                       .arg(backgroundColor)
+                       .arg(isIncoming ? "60px" : "10px 10px")
+                       .arg(isIncoming ? "10px" : "10px 80px")
+                       .arg(sender)
+                       .arg(text)
+                       .arg(isIncoming ? "left" : "right")
+                       .arg(time);
+
+    messageHistory->insertHtml(html);
+    messageHistory->insertPlainText("\n");
+
+    // Scroll to the bottom to show newest messages
+    messageHistory->verticalScrollBar()->setValue(
+        messageHistory->verticalScrollBar()->maximum()
+        );
 }
+
+
+
 
 ChatWindow::ChatWindow(Client* client, QWidget *parent)
     : QMainWindow(parent),
@@ -142,17 +181,23 @@ ChatWindow::ChatWindow(Client* client, QWidget *parent)
     left_layout->addWidget(add_chat_button, 0, Qt::AlignCenter);
 
     connect(add_chat_button, &QPushButton::clicked, this, [this]() {
-         stacked_wid->setCurrentIndex(0);
+        stacked_wid->setCurrentIndex(0);
     });
 
     QWidget *messageArea = new QWidget(dialogsWindow);
     QVBoxLayout *messageAreaLayout = new QVBoxLayout(messageArea);
     messageArea->setStyleSheet(
-        "background-color: #e2ddd8; ");
+        "   background-image: url(:/res/im/background.jpg);");
 
     messageHistory = new QTextBrowser(messageArea);
     messageHistory->setMaximumSize(650, 1200);
-    // messageHistory->setStyleSheet("background-image: url(:/res/im/background.jpg); ");
+    messageHistory->setStyleSheet(
+        "QTextBrowser {"
+        "   background-image: url(:/res/im/background.jpg);"
+        "   background-attachment: fixed;"
+        "   background-position: center;"
+        "   background-repeat: repeat;"
+        "}");
     messageAreaLayout->addWidget(messageHistory);
 
     QHBoxLayout *inputLayout = new QHBoxLayout;
@@ -278,19 +323,18 @@ void ChatWindow::createChat(const QJsonObject &chatInfo)
 
 
 void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTextBrowser *messageHistory) {
-    messageHistory->clear(); // Очистка старых сообщений
-    qDebug() << messages;
+    //messageHistory->clear(); // Очистка старых сообщений
+    QTextCursor cursor = messageHistory->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    messageHistory->setTextCursor(cursor);
     for (const QJsonValue &value : messages) {
         QJsonObject messageObj = value.toObject();
         int senderId = messageObj["sender"].toInt();
         QString text = messageObj["text"].toString();
         QString time = messageObj["time"].toString();
 
-        // Определяем, входящее сообщение или исходящее
-        bool isIncoming = (senderId == person->userId); // Например, "Me" — это текущий пользователь
-        qDebug() << senderId << " " << person->userId << " " << isIncoming << "Я" << myClient->getUserName();
-
-        QString sender = (isIncoming == true) ? person->userName : myClient->getUserName();
+        bool isIncoming = (senderId == person->userId); // Сообщение от собеседника
+        QString sender = isIncoming ? person->userName : myClient->getUserName();
 
         addChatMessage(time, text, isIncoming, sender);
     }
@@ -299,11 +343,10 @@ void ChatWindow::displayMessages(Person* person, const QJsonArray &messages, QTe
 
 
 void ChatWindow::onNewMessage(QString& sender, int chatId, QString& messageText, QString& time){
-    if (this->getCurrentChat() != chatId){
-        return;
+    if (chatId == getCurrentChat()) {
+        bool isIncoming = (sender != myClient->getUserName()); // Проверяем, кто отправил сообщение
+        addChatMessage(time, messageText, isIncoming, sender);
     }
-    bool isIncoming = this->myClient->getUserName() == sender ? false: true;
-    addChatMessage(time, messageText, isIncoming, sender);
 }
 
 

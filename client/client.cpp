@@ -9,7 +9,8 @@
 Client::Client(QWidget *parent) :
     socket(new QTcpSocket(this))
 {
-    socket->connectToHost("127.0.0.1", 3333);
+    // socket->connectToHost("127.0.0.1", 3333);
+    socket->connectToHost("192.168.137.1", 3333);
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
 }
 
