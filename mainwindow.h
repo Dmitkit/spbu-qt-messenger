@@ -41,12 +41,6 @@ private slots:
     void onLoginSuccess(int userId, QString& userName);
     void onLoginError(const QString &errorMessage);
     void onRegistrationSuccess();
-    void onRegistrationError(const QString &errorMessage);
-    void onNewMessage(const QString &sender, const QString &message);
-    void onConnected();
-    void onConnectionError(const QString &errorMessage);
-    void onDisconnected();
-
 };
 
 #endif // MAINWINDOW_HPP

@@ -50,7 +50,6 @@ signals:
     void chatCreated(QJsonObject &chatInfo);
     void messagesAcquired(QJsonArray &messages);
     void messageSent(QString &sender, int senderId, QString &messageText, QString &time);
-
 };
 
 #endif // CLIENT_H

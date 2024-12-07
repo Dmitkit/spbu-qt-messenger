@@ -126,7 +126,7 @@ ChatWindow::ChatWindow(Client* client, QWidget *parent)
     });
 
     choice->setStyleSheet(
-        "background-image: url(:/res/im/background.jpg); "
+        // "background-image: url(:/res/im/background.jpg); "
         "background-position: center; "
         );
 

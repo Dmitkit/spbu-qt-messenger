@@ -199,26 +199,3 @@ void Client::setUserId(int userId){
 void Client::setLogin(QString login){
     this->myLogin = login;
 }
-
-// void Client::loginSuccess(){}
-
-// // Ошибка при входе (например, неправильный логин или пароль)
-// void Client::loginError(const QString &errorMessage){}
-
-// // Успешная регистрация
-// void Client::registrationSuccess(){}
-
-// // Ошибка при регистрации
-// void Client::registrationError(const QString &errorMessage){}
-
-// // Получено новое сообщение
-// void Client::newMessage(const QString &sender, const QString &message){}
-
-// // Подключение к серверу установлено
-// void Client::connected(){}
-
-// // Ошибка подключения
-// void Client::connectionError(const QString &errorMessage){}
-
-// // Соединение с сервером потеряно
-// void Client::disconnected(){}

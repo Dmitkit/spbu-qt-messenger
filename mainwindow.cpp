@@ -23,12 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(myClient, &Client::loginSuccess, this, &MainWindow::onLoginSuccess);
     connect(myClient, &Client::loginError, this, &MainWindow::onLoginError);
     connect(myClient, &Client::registrationSuccess, this, &MainWindow::onRegistrationSuccess);
-    connect(myClient, &Client::registrationError, this, &MainWindow::onRegistrationError);
-    connect(myClient, &Client::newMessage, this, &MainWindow::onNewMessage);
-    connect(myClient, &Client::connected, this, &MainWindow::onConnected);
-    connect(myClient, &Client::connectionError, this, &MainWindow::onConnectionError);
-    connect(myClient, &Client::disconnected, this, &MainWindow::onDisconnected);
-
 
     setWindowTitle("");
     setWindowIcon(QIcon());
@@ -161,12 +155,29 @@ void MainWindow::onRegisterButtonClicked() {
         regPasswordEdit->setPlaceholderText("Введите пароль");
         regPasswordEdit->setEchoMode(QLineEdit::Password);
 
+        QString styleSheet = "QLineEdit {background-color: #ADD8E6;"
+                             "padding: 6px;"
+                             "border-radius: 5px;}";
+        nameEdit->setStyleSheet(styleSheet);
+        regLoginEdit->setStyleSheet(styleSheet);
+        regPasswordEdit->setStyleSheet(styleSheet);
+
         // Добавляем в макет
         inputLayout->addWidget(nameEdit);
         inputLayout->addWidget(regLoginEdit);
         inputLayout->addWidget(regPasswordEdit);
         inputLayout->addWidget(submitRegisterButton);
         inputLayout->addWidget(backButton);
+
+        QString buttonStyle = "QPushButton {"
+                              "background-color: #1E90FF;"
+                              "color: white;"
+                              "border-radius: 8px;"
+                              "padding: 8px 12px;}"
+                              "QPushButton:hover{"
+                              "background-color: #1C86EE;}";
+        submitRegisterButton->setStyleSheet(buttonStyle);
+        backButton->setStyleSheet(buttonStyle);
 
         // Сохраняем виджеты как свойства центрального виджета
         centralWidget->setProperty("nameEdit", QVariant::fromValue(static_cast<QWidget*>(nameEdit)));
@@ -269,23 +280,3 @@ void MainWindow::onRegistrationSuccess()
     loginEdit->clear();
     passwordEdit->clear();
 }
-void MainWindow::onRegistrationError(const QString &errorMessage)
-{
-    // Отображаем сообщение об ошибке
-}
-void MainWindow::onConnected()
-{
-    // Обновляем статус подключения
-}
-void MainWindow::onConnectionError(const QString &errorMessage)
-{
-    // Отображаем сообщение об ошибке подключения
-}
-void MainWindow::onDisconnected()
-{
-    // Обновляем статус интерфейса
-}
-
-void MainWindow::onNewMessage(const QString &sender, const QString &message)
-{}
-
